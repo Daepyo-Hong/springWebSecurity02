@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<!-- https://www.thymeleaf.org/doc/articles/springsecurity.html -->
 <body>
+    <!-- Method Security : isAnonymous(), isAuthenticated() -->
+    <div sec:authorize="isAnonymous()">
+        <a href="/signin">로그인</a>
+    </div>
     <span>[[${#authentication.name}]]</span>
-    <span>[[${#authentication.principal.email}]]</span>
-    <span>[[${#authentication.principal.name}]]</span>
-    <span>[[${#authentication.principal.nickName}]]</span>
-    인덱스페이지
+    <span th:if="${#authorization.expression('isAuthenticated()')}">[[${#authentication.principal.email}]]</span>
+    <span sec:authorize="isAuthenticated()">[[${#authentication.principal.name}]]</span>
+    <span sec:authorize="isAuthenticated()">[[${#authentication.principal.nickName}]]</span>
+    Roles: <span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
+    <hr>
+    <p>인덱스페이지</p>
 </body>
 </html>
